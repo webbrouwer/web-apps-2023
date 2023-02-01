@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sparrow Photography</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<style>
+			body {
+				margin: 0 auto;
+				max-width: 50em;
+				width: 88%;
+			}
+
+
+			/**
+			 * Grid Layout
+			 */
+
+			@media (min-width: 20em) {
+				#photos {
+					display: grid;
+					grid-template-columns: repeat(2, 1fr);
+					grid-template-rows: 1fr;
+					grid-column-gap: 2em;
+					grid-row-gap: 2em;
+				}
+			}
+
+			@media (min-width: 32em) {
+				#photos {
+					grid-template-columns: repeat(3, 1fr);
+				}
+			}
+
+			@media (min-width: 42em) {
+				#photos {
+					grid-template-columns: repeat(4, 1fr);
+				}
+			}
+
+
+			/**
+			 * Nav Menu
+			 */
+
+			.nav {
+				padding: 1em 0;
+			}
+
+			.nav a {
+				text-decoration: none;
+			}
+
+			.nav a:focus,
+			.nav a:hover {
+				text-decoration: underline;
+			}
+
+
+			/**
+			 * Footer
+			 */
+
+			footer {
+				border-top: 1px solid #e5e5e5;
+				margin-top: 5em;
+			}
+
+
+			/**
+			 * Responsive images
+			 */
+
+			img {
+				height: auto;
+				max-width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+
+		<nav class="nav">
+			<a class="logo" href="index.html"><strong>Sparrow Photography</strong></a>
+		</nav>
+
+		<h1>Sparrow Photography</h1>
+
+		<div id="app">Loading...</div>
+
+
+		<footer>
+			<p><em>Photos by Jack Sparrow. All rights reserved.</em></p>
+		</footer>
+
+
+		<script>
+			let api = 'https://vanillajsacademy.com/api/photos.json';
+			let app = document.querySelector('#app');
+
+			function photosHTML(photos) {
+
+				if(!photos || photos < 1) {
+					return 'No photos in sight'
+				}
+
+				return `
+					<div id="photos">
+						${photos.map(function (photos) {
+							return `
+								<div class="photo">
+									<img alt="${photos.description}" src="${photos.url}">
+									<p>${photos.name}</p>
+								</div>`;
+						}).join('')}
+					</div>`;
+			}
+
+			async function getPhotos() {
+				try {
+					let response = await fetch(api);
+					if(!response.ok) throw response;
+					let photos = await response.json();
+					app.innerHTML = photosHTML(photos);
+				} catch (error) {
+					console.warn(error);
+					app.innerHTML = photosHTML(photos);
+				}
+			}
+		
+			getPhotos();
+
+		</script>
+
+	</body>
+</html>
